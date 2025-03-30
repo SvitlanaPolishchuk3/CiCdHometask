@@ -1,30 +1,52 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON = '/Svitlana_Polishchuk/bin/python3'  
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                git 'https://github.com/SvitlanaPolishchuk3/CiCdHometask.git'
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    userRemoteConfigs: [[url: 'https://github.com/SvitlanaPolishchuk3/CiCdHometask']]
+                ])
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Building the project...'
+                sh 'pip install -r requirements.txt'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                sh 'pip install -r requirements.txt || true'  // Install dependencies if a requirements.txt exists
-                sh 'pytest PyTests_1.py'  // Run your pytest script
+                sh 'pytest tests/'
             }
         }
 
-        stage('Deploy') {
+        stage('Create Develop Branch') {
             steps {
-                echo 'Deploying application...'
+                script {
+                    sh "git checkout -b develop || git checkout develop"
+                    sh "git push origin develop"
+                }
+            }
+        }
+
+        stage('Deploy to Release Branch') {
+            when {
+                branch 'develop'  // Only run when pushing to 'develop'
+            }
+            steps {
+                script {
+                    sh "git checkout -b release || git checkout release"
+                    sh "git merge develop"
+                    sh "git push origin release"
+                }
             }
         }
     }
