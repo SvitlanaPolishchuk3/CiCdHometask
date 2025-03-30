@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your code from the repository
                 checkout scm
             }
         }
@@ -14,13 +13,12 @@ pipeline {
                 script {
                     sh '''
                     if [ ! -d "/tmp/jenkins_venv" ]; then
-                        python3 -m venv /tmp/jenkins_venv  
+                        python3 -m venv /tmp/jenkins_venv
                     fi
 
-                    
-                    source /tmp/jenkins_venv/bin/activate
-                    pip install --upgrade pip  
-                    pip install pytest  
+                    . /tmp/jenkins_venv/bin/activate
+                    pip install --upgrade pip
+                    pip install pytest
                     '''
                 }
             }
@@ -29,10 +27,9 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Activate virtual environment and run PyTests_1.py
                     sh '''
-                    source /tmp/jenkins_venv/bin/activate  
-                    pytest PyTests_1.py  
+                    . /tmp/jenkins_venv/bin/activate
+                    pytest PyTests_1.py
                     '''
                 }
             }
