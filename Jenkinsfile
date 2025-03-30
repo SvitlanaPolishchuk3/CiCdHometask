@@ -1,29 +1,40 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON = '/Svitlana_Polishchuk/bin/python3'  // Adjust based on Docker
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                echo 'Cloning repository...'
+                // Checkout your code from the repository
                 checkout scm
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
-                echo 'Installing dependencies...'
-                sh 'pip install -r requirements.txt || echo "Failed to install dependencies!"'
+                script {
+                    sh '''
+                    if [ ! -d "/tmp/jenkins_venv" ]; then
+                        python3 -m venv /tmp/jenkins_venv  
+                    fi
+
+                    
+                    source /tmp/jenkins_venv/bin/activate
+                    pip install --upgrade pip  
+                    pip install pytest  
+                    '''
+                }
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                sh 'pytest tests/ || echo "Tests failed!"'
+                script {
+                    // Activate virtual environment and run PyTests_1.py
+                    sh '''
+                    source /tmp/jenkins_venv/bin/activate  
+                    pytest PyTests_1.py  
+                    '''
+                }
             }
         }
     }
