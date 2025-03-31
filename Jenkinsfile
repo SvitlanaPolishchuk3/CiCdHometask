@@ -8,21 +8,24 @@ pipeline {
             }
         }
 
-        stage('Setup Python Environment') {
-            steps {
-                script {
-                    sh '''
-                    if [ ! -d "/tmp/jenkins_venv" ]; then
-                        python3 -m venv /tmp/jenkins_venv
-                    fi
+		stage('Setup Python Environment') {
+			steps {
+				script {
+					sh '''
+					if [ -d "/tmp/jenkins_venv" ]; then
+						rm -rf /tmp/jenkins_venv  
+					fi
 
-                    . /tmp/jenkins_venv/bin/activate
-                    pip install --upgrade pip
-                    pip install pytest
-                    '''
-                }
-            }
-        }
+					python3 -m venv /tmp/jenkins_venv
+					chmod -R 777 /tmp/jenkins_venv
+
+					. /tmp/jenkins_venv/bin/activate
+					pip install --upgrade --user pip
+					pip install --user -r requirements.txt
+					'''
+				}
+			}
+		}
 
         stage('Run Tests') {
             steps {
