@@ -17,8 +17,8 @@ pipeline {
                     fi
 
                     . /tmp/jenkins_venv/bin/activate
-                    sudo pip install --upgrade pip
-                    sudo pip install pytest
+                    pip install --upgrade pip
+                    pip install pytest
                     '''
                 }
             }
