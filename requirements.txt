@@ -1,7 +1,4 @@
 
-pipenv==2023.7.23
 pyodbc==4.0.39
 pytest==8.3.5
-virtualenv==20.24.3
-virtualenv-clone==0.5.7
 
