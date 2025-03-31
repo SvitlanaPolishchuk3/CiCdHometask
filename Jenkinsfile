@@ -16,10 +16,9 @@ pipeline {
                         python3 -m venv /tmp/jenkins_venv
                     fi
 
-                    chmod -R 777 /tmp/jenkins_venv  
                     . /tmp/jenkins_venv/bin/activate
-                    pip install --upgrade pip
-                    pip install pytest
+                    sudo pip install --upgrade pip
+                    sudo pip install pytest
                     '''
                 }
             }
