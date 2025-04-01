@@ -1,27 +1,22 @@
-import pyodbc
+import pymssql
 import pytest
 import csv
 import decimal
 
-
 DB_CONFIG = {
-    "server": "<Yourlocalsever>",  
+    "server": "EPUAKYIW061B",  
     "database": "AdventureWorks2012",
-    "username": "<Your_login>",  
-    "password": "<Your_password>",  
-    "driver": "{ODBC Driver 17 for SQL Server}"
+    "username": "NewUserLogin",  
+    "password": "StrongPassword123"
 }
 
-
 def get_db_connection():
-    conn_str = (
-        f"DRIVER={DB_CONFIG['driver']};"
-        f"SERVER={DB_CONFIG['server']};"
-        f"DATABASE={DB_CONFIG['database']};"
-        f"UID={DB_CONFIG['username']};"
-        f"PWD={DB_CONFIG['password']}"
+    return pymssql.connect(
+        server=DB_CONFIG["server"],
+        user=DB_CONFIG["username"],
+        password=DB_CONFIG["password"],
+        database=DB_CONFIG["database"]
     )
-    return pyodbc.connect(conn_str)
 
 
 @pytest.fixture(scope="module")
