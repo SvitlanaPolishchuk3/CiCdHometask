@@ -32,10 +32,16 @@ pipeline {
                 script {
                     sh '''
                     . venv/bin/activate  
-                    pytest PyTests_1.py
+                    pytest --junitxml=pytest_report.xml PyTests_1.py
                     '''
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'pytest_report.xml'
         }
     }
 }
