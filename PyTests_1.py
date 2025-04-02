@@ -4,7 +4,7 @@ import csv
 import decimal
 
 DB_CONFIG = {
-    "server": "EPUAKYIW061B",  
+    "server": "192.168.0.6",  
     "database": "AdventureWorks2012",
     "username": "NewUserLogin",  
     "password": "StrongPassword123"
