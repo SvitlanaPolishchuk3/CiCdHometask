@@ -12,6 +12,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    echo "Setting up Python virtual environment..."
                     VENV_DIR="venv"
 
                     if [ -d "$VENV_DIR" ]; then
@@ -31,8 +32,21 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    echo "Running tests..."
                     . venv/bin/activate  
                     pytest --junitxml=pytest_report.xml PyTests_1.py
+                    '''
+                }
+            }
+        }
+
+        stage('Release Deployment') {
+            steps {
+                script {
+                    sh '''
+                    echo "Creating release branch and pushing changes..."
+                    git checkout -b release
+                    git push origin release
                     '''
                 }
             }
