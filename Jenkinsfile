@@ -50,9 +50,17 @@ pipeline {
                         echo "https://$GIT_USERNAME:$GIT_PASSWORD@github.com" > ~/.git-credentials
                         git config --global credential.useHttpPath true
 
-                        echo "Creating release branch and pushing changes..."
-                        git checkout -b release
-                        git push origin release
+						echo "Checking if 'release' branch exists..."
+						if git show-ref --quiet refs/heads/release; then
+							echo "'release' branch already exists. Checking it out..."
+							git checkout release
+						else
+							echo "Creating new 'release' branch..."
+							git checkout -b release
+						fi
+
+						echo "Pushing changes to the release branch..."
+						git push origin release
 
                         # Cleanup for security
                         rm -f ~/.git-credentials
