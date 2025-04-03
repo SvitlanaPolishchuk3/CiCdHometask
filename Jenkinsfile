@@ -52,6 +52,8 @@ pipeline {
                         if git show-ref --quiet refs/heads/release; then
                             echo "'release' branch already exists. Checking it out..."
                             git checkout release
+							git pull origin main  
+							git merge main        
                         else
                             echo "Creating new 'release' branch..."
                             git checkout -b release
