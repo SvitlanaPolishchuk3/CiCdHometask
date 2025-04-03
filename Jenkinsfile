@@ -46,7 +46,7 @@ pipeline {
                     script {
                         sh '''
                         echo "Configuring Git credentials..."
-                        git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/CiCdHometask.git
+                        git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GIT_USERNAME/CiCdHometask.git
 
                         echo "Checking if 'release' branch exists..."
                         if git show-ref --quiet refs/heads/release; then
