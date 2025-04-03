@@ -42,12 +42,23 @@ pipeline {
 
         stage('Release Deployment') {
             steps {
-                script {
-                    sh '''
-                    echo "Creating release branch and pushing changes..."
-                    git checkout -b release
-                    git push origin release
-                    '''
+                withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    script {
+                        sh '''
+                        echo "Configuring Git credentials..."
+                        git config --global credential.helper store
+                        echo "https://$GIT_USERNAME:$GIT_PASSWORD@github.com" > ~/.git-credentials
+                        git config --global credential.useHttpPath true
+
+                        echo "Creating release branch and pushing changes..."
+                        git checkout -b release
+                        git push origin release
+
+                        # Cleanup for security
+                        rm -f ~/.git-credentials
+                        git config --global --unset credential.helper
+                        '''
+                    }
                 }
             }
         }
