@@ -43,25 +43,27 @@ pipeline {
         stage('Release Deployment') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    script {
-                        sh '''
-                        echo "Configuring Git credentials..."
-                        git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GIT_USERNAME/CiCdHometask.git
+					script {
+						sh '''
+						echo "Configuring Git credentials..."
+						git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GIT_USERNAME/CiCdHometask.git
 
-                        echo "Checking if 'release' branch exists..."
-                        if git show-ref --quiet refs/heads/release; then
-                            echo "'release' branch already exists. Checking it out..."
-                            git checkout release
-							git pull origin main  
-							git merge main        
-                        else
-                            echo "Creating new 'release' branch..."
-                            git checkout -b release
-                        fi
+						echo "Fetching latest changes from origin..."
+						git fetch origin main  
 
-                        echo "Pushing changes to the release branch..."
-                        git push origin release
-                        '''
+						echo "Checking if 'release' branch exists..."
+						if git show-ref --quiet refs/heads/release; then
+							echo "'release' branch already exists. Checking it out..."
+							git checkout release
+							git merge origin/main  
+						else
+							echo "Creating new 'release' branch from main..."
+							git checkout -b release origin/main
+						fi
+
+						echo "Pushing changes to the release branch..."
+						git push origin release
+						'''
                     }
                 }
             }
